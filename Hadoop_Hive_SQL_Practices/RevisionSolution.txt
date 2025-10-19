@@ -1,0 +1,240 @@
+
+
+*Cloudera Folks Revision*
+
+==================
+Slide 5
+==================
+
+=========
+Insert the data
+=========
+
+
+mysql -uroot -pcloudera
+drop database if exists zeyodbrev;
+create database zeyodbrev;
+use zeyodbrev;
+
+CREATE TABLE customerrev(custid INT,firstname VARCHAR(20),lastname VARCHAR(20),city varchar(50),age int,createdt date,transactamt int );
+
+insert into customerrev values(1,'Arun','Kumar','chennai',33,'2015-09-20',100000);
+insert into customerrev values(2,'srini','vasan','chennai',33,'2015-09-21',10000);
+insert into customerrev values(3,'vasu','devan','banglore',39,'2015-09-22',90000);
+insert into customerrev values(4,'mohamed','imran','hyderabad',33,'2015-09-23',1000);
+insert into customerrev values(5,'arun','basker','chennai',23,'2015-09-24',200000);
+insert into customerrev values(6,'arun1','basker','chennai',23,'2015-09-24',200000);
+insert into customerrev values(7,'srini','vasan','chennai',33,'2015-09-21',10000);
+insert into customerrev values(8,'vasu','devan','banglore',39,'2015-09-22',90000);
+insert into customerrev values(9,'mohamed','imran','hyderabad',33,'2015-09-23',1000);
+insert into customerrev values(10,'mohamed','imran','hyderabad',33,'2015-09-23',1000);
+
+select * from customerrev;
+quit
+
+sqoop import --connect jdbc:mysql://localhost/zeyodbrev --username root --password cloudera --table customerrev -m 1  --delete-target-dir --target-dir /user/cloudera/revimport
+
+hadoop fs -ls /user/cloudera/revimport
+hadoop fs -cat /user/cloudera/revimport/*
+
+==================
+Slide 6 --- import chennai with two columns
+==================
+
+
+sqoop import --connect jdbc:mysql://localhost/zeyodbrev --username root --password cloudera --table customerrev -m 1 --where "city='chennai'" --columns firstname,lastname  --delete-target-dir --target-dir /user/cloudera/whereimport
+
+hadoop fs -ls /user/cloudera/whereimport
+hadoop fs -cat /user/cloudera/whereimport/*
+
+==================
+Slide 7 --- same with query
+==================
+
+
+sqoop import --connect jdbc:mysql://localhost/zeyodbrev --username root --password cloudera -m 1 --query "select firstname,lastname from customerrev where city='chennai' and \$CONDITIONS"  --delete-target-dir --target-dir /user/cloudera/queryimport;
+
+hadoop fs -ls /user/cloudera/queryimport
+hadoop fs -cat /user/cloudera/queryimport/*
+
+
+
+==================
+Slide 8 --- Insert 11 and 12 alone
+==================
+
+
+
+========Normal Import===========
+
+sqoop import --connect jdbc:mysql://localhost/zeyodbrev --username root --password cloudera --table customerrev -m 1  --delete-target-dir --target-dir /user/cloudera/inimport
+
+hadoop fs -ls /user/cloudera/inimport
+hadoop fs -cat /user/cloudera/inimport/part-m-00000
+
+
+
+========Add records===========
+
+
+mysql -uroot -pcloudera
+use zeyodbrev;
+insert into customerrev values(11,'mohamed','imran','hyderabad',33,'2015-09-23',1000);
+insert into customerrev values(12,'mohamed','imran','hyderabad',33,'2015-09-23',1000);
+select * from customerrev;
+quit
+
+sqoop import --connect jdbc:mysql://localhost/zeyodbrev --username root --password cloudera --table customerrev -m 1  --target-dir /user/cloudera/inimport --incremental append --check-column custid --last-value 10
+
+hadoop fs -ls /user/cloudera/inimport
+hadoop fs -cat /user/cloudera/inimport/part-m-00001
+
+
+
+
+
+==================
+Slide 9 --- Job
+==================
+
+echo -n cloudera>/home/cloudera/pfile
+
+hadoop fs -rmr /user/cloudera/incrementalappendjob
+
+sqoop job --create injobrev -- import --connect jdbc:mysql://localhost/zeyodbrev --username root --password-file file:///home/cloudera/pfile --table customerrev -m 1 --target-dir /user/cloudera/incrementalappendjob --incremental append --check-column custid --last-value 0;
+
+sqoop job --list
+
+sqoop job --exec injobrev
+
+hadoop fs -ls /user/cloudera/incrementalappendjob
+hadoop fs -cat /user/cloudera/incrementalappendjob/part-m-00000
+
+sqoop job --show injobrev
+
+==================
+Slide 10 --- Parquet
+==================
+
+sqoop import --connect jdbc:mysql://localhost/zeyodbrev --username root --password cloudera --table customerrev -m 1  --delete-target-dir --target-dir /user/cloudera/parquetimport --as-parquetfile
+
+
+hadoop fs -ls /user/cloudera/parquetimport
+
+
+
+==================
+Slide 11 --- Parquet
+==================
+
+Sequence File Format  -- 
+
+TextFile - Readable,Row format, Huge in size,Query takes time
+Avro- Row format, 60% Compression,Query takes time,Schema evolution
+Parquet - Columnar, 60-80%Compression, query faster, Predicate pushdown,Target System
+orc - Columnar,90%Compression, query faster but not as parquet,Historical storage
+
+
+
+==================
+Slide 12 --- Parquet
+==================
+
+
+sqoop import --connect jdbc:mysql://localhost/zeyodbrev --username root --password cloudera --table customerrev -m 2 --split-by custid   --delete-target-dir --target-dir /user/cloudera/mulmappers
+
+hadoop fs -ls /user/cloudera/mulmappers
+
+
+
+
+==================
+Slide 14 Hive
+==================
+
+Hive is layer on HDFS
+ETL- SQL and ELT - Hive
+Load Time parsing  and Query time parsing
+
+
+
+
+==================
+Slide 15 Hive
+==================
+
+hive        --type and Go Inside
+
+create database if not exists revhivedb;
+use revhivedb;
+create table revhivetab(id int,name string,chk string) row format delimited fields terminated by ',';
+quit;
+hadoop fs -ls /user/hive/warehouse/
+hadoop fs -ls /user/hive/warehouse/revhivedb.db/
+
+
+==================
+Slide 16 Hive
+==================
+
+cd
+echo 1,Sai,I>INDTxns
+echo 2,zeyo,I>>INDTxns
+hive        --type and Go Inside
+
+use revhivedb;
+load data local inpath '/home/cloudera/INDTxns' into table revhivetab;
+select * from revhivetab;
+quit;
+
+
+==================
+Slide 17 Hive
+==================
+
+cd
+echo 1,Sai,I>INDTxns
+echo 2,zeyo,I>>INDTxns
+hadoop    fs     -rmr       /user/cloudera/ldir
+hadoop    fs     -mkdir     /user/cloudera/ldir
+hadoop    fs    -put     INDTxns    /user/cloudera/ldir
+
+
+hive             --type and Go Inside
+
+create database if not exists revhivedb;
+use revhivedb;
+create table loctab(id int,name string,chk string) row format delimited fields terminated by ',' location '/user/cloudera/ldir';
+select * from loctab;
+drop table loctab;
+quit;
+
+hadoop fs -ls  /user/cloudera                ------------u will not see ldir
+
+
+
+
+
+
+==================
+Slide 17 Hive
+==================
+
+cd
+echo 1,Sai,I>INDTxns
+echo 2,zeyo,I>>INDTxns
+hadoop    fs     -rmr       /user/cloudera/ldir
+hadoop    fs     -mkdir     /user/cloudera/ldir
+hadoop    fs    -put     INDTxns    /user/cloudera/ldir
+
+
+hive             --type and Go Inside
+
+create database if not exists revhivedb;
+use revhivedb;
+create external table loctabexternal(id int,name string,chk string) row format delimited fields terminated by ',' location '/user/cloudera/ldir';
+select * from loctabexternal;
+drop table loctabexternal;
+quit;
+
+hadoop fs -ls  /user/cloudera/               ------------u will  see ldir
