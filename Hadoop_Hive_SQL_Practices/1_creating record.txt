@@ -1,0 +1,16 @@
+
+mysql> create database customerdata;
+
+mysql> use customerdata;
+
+mysql> create table custtab(cust_id int, firstname varchar(20), lastname varchar(20), city varchar(20), age int, trans_date date, trans_amt int);
+
+
+mysql> insert into custtab 
+values
+(1,'Arun','Roy','Gwalior',24,'2025-09-21',256),
+(2,'Asiti','Sen','Delhi',21,'2025-08-11',279),
+(3,'Vinit','Singh','Gwalior',32,'2024-05-14',756),
+(4,'Riya','Dev','Delhi',27,'2025-04-28',1256),
+(5,'Abhishek','Roy','Chennai',29,'2025-07-07',578),
+(6,'Raja','Gupta','Chennai',27,'2025-09-21',456);

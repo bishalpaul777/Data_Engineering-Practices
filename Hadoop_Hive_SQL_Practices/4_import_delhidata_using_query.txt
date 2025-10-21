@@ -1,0 +1,1 @@
+sqoop import --connect jdbc:mysql://localhost/customerdata --username root --password cloudera -m 1 --query "select firstname,lastname from custtab where city='Delhi' and \$CONDITIONS" --target-dir /user/cloudera/customerdata/Delhidata
