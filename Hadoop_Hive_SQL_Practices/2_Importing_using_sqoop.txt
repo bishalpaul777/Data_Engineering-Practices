@@ -1,0 +1,1 @@
+sqoop import --connect jdbc:mysql://localhost/customerdata --username root --password cloudera --table custtab -m 1 --target-dir /user/cloudera/customerdata/
