@@ -1,0 +1,22 @@
+|| Create  Hive  Table ||
+
+type ----> hive
+
+hive> create database hivedb;
+hive > use hivedb;
+hive > create table hivetab(id int, name string, age int) row format delimited fields terminated  by ',';
+hive > quit;
+
+
+
+|| Check  Backend ||
+
+hadoop fs -ls /user/hive/warehouse/ --> 
+drwxrwxrwx   - cloudera supergroup          0 2025-10-22 12:00 /user/hive/warehouse/hivedb.db
+
+hadoop fs -ls /user/hive/warehouse/hivedb.db  --> 
+drwxrwxrwx   - cloudera supergroup          0 2025-10-22 12:00 /user/hive/warehouse/hivedb.db/hivetab
+
+
+
+Creates directory for each table.

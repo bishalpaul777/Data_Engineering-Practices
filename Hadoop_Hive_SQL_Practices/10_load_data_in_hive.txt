@@ -1,0 +1,15 @@
+|| Create data in local hdfs ||
+
+echo 1,Joy,25 > /home/cloudera/hivedata/Firstdata/tution
+echo 2,Adi,21 >> /home/cloudera/hivedata/Firstdata/tution
+echo 3,Riya,23  >> /home/cloudera/hivedata/Firstdata/tution
+
+
+|| Again enter into hive ||
+
+hive > use hivedb;
+
+
+|| Now load the created data into the table ||
+
+load data local inpath '/home/cloudera/hivedata/Firstdata/tution' into table hivetab;
