@@ -1,0 +1,3 @@
+|| Import data and save as Parquetfile ||
+
+sqoop import --connect jdbc:mysql://localhost/customerdata --username root -password-file file:///home/clou          dera/passfile --table custtab -m 1 --target-dir /user/cloudera/customerdata/parquetfile --as-parquetfile

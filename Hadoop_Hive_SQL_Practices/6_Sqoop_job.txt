@@ -1,0 +1,14 @@
+|| Creating Sqoop Job ||
+
+sqoop job --create incjob -- import --connect jdbc:mysql://localhost/customerdata --username root --password-file file:///home/cloudera/passfile --table custtab -m 1 --target-dir /user/cloudera/customerdata/sqoopjob --incremental append --check-column cust_id --last-value 0
+
+
+|| See the job ||
+
+sqoop job --list
+
+
+|| Execute the job ||
+
+sqoop job -exec {jobname}
+

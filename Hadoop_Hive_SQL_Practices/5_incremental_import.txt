@@ -1,0 +1,16 @@
+|| NORMAL  IMPORT ||
+
+sqoop import --connect jdbc:mysql://localhost/customerdata --username root --password cloudera --table custtab -m 1 --target-dir /user/cloudera/customerdata/incrementaldata
+
+
+|| ADDING   NEW    VALUE||
+
+mysql -uroot -pcloudera
+use customerdata;
+insert into custtab values(7,"Bishal","Paul","Delhi",28,"2025-04-19",1485),(8,"Shivam","Mishra","Gwalior",26,"2024-06-21",2365);
+
+
+
+|| import the newly added value only ||
+
+sqoop import --connect jdbc:mysql://localhost/customerdata --username root --password cloudera --table custtab -m 1 --target-dir /user/cloudera/customerdata/incrementaldata --incremental append --check-column cust_id --last-value 6
