@@ -1,0 +1,37 @@
+|| Enter some data in a file locally ||
+
+echo 1, Aditya, 25 > manfile
+echo 2, deb, 28 >> manfile
+
+
+
+|| Create managed table ||
+
+hive > create table mantab( id int, name string, age int) row format delimited fields terminated by ',';
+
+
+|| load the data ||
+
+hive > load data local inpath '/home/cloudera/manfile' into table mantab;
+
+
+
+|| This will create a directory in the name of table in the hive warehouse ||
+
+Hadoop fs -ls /user/hive/warehouse    <---type
+>> mantab     <-- directory
+Hadoop fs -ls /user/hive/warehouse/mantab       <----type
+>> manfile
+
+
+
+
+
+|| If we delete the hive table, it will also delete the directory ||
+
+hive > drop table mantab;
+
+
+
+
+|| The back end file will also gone, because it's a managed table || 
