@@ -1,0 +1,54 @@
+|| Dynamic Partition tables ||
+
+To make dynamic partition table, we need to do first table to table insert....
+
+
+|| Create a data file in local ||
+
+
+mkdir /home/cloudera/hivedata/dyndata/
+
+echo 1,abhi,56,maths > /home/cloudera/hivedata/dyndata/dynfile
+echo 2,nagu,78,maths >> /home/cloudera/hivedata/dyndata/dynfile
+echo 3,ram,82,science >> /home/cloudera/hivedata/dyndata/dynfile
+echo 4,raman,89,english >> /home/cloudera/hivedata/dyndata/dynfile
+echo 5,gyandeep,65,science >> /home/cloudera/hivedata/dyndata/dynfile
+echo 6,pradeep,79,maths >> /home/cloudera/hivedata/dyndata/dynfile
+echo 7,subho,45,english >> /home/cloudera/hivedata/dyndata/dynfile
+echo 8,bedant,95,english >> /home/cloudera/hivedata/dyndata/dynfile
+
+
+
+
+|| Create a table (helptab) in Hadoop, and insert these data ||
+
+hive > create table helptab(id int, name string, marks int, subject string) row format delimited fields terminated by ',' location '/user/cloudera/helpdir';
+
+
+
+
+|| Load the data in the table ||
+
+load data local inpath '/home/cloudera/hivedata/dyndata/dynfile' into table helptab;
+
+
+
+
+|| Now create partition table in Hadoop ||
+
+hive > create table dyntab(id int, name string,marks int) partitioned by (subject string) row format delimited fields terminated by ',' location '/user/cloudera/dyndir';
+
+
+
+
+
+|| set some properties before dynamic partition ||
+
+set hive.exec.dynamic.partition.mode = nonrestrict;
+
+
+
+
+|| Now load the data from helptab table into the partition table ||
+
+hive > insert into dyntab partition(subject) select id,name,marks,subject from helptab;
