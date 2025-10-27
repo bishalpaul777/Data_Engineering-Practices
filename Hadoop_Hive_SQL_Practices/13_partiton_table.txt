@@ -1,0 +1,46 @@
+					|| Partition table ||
+
+|| Create some data file ||
+
+echo 1,Hema,I > /home/cloudera/hivedata/Partitiondata/Indtxn
+echo 2,Pushpa,I >> /home/cloudera/hivedata/Partitiondata/Indtxn
+echo 3,John,S > /home/cloudera/hivedata/Partitiondata/Usatxn
+echo 4,David,S >> /home/cloudera/hivedata/Partitiondata/Usatxn
+echo 5,Astin,K > /home/cloudera/hivedata/Partitiondata/Uktxn
+echo 6,Tim,K >> /home/cloudera/hivedata/Partitiondata/Uktxn
+
+
+
+
+
+|| Go to hive, create partition table ||
+
+hive > create table parttab(Id int, name string, chk string) partitioned by (country string) row format delimited fields terminated by ',' location '/user/cloudera/partdir';
+
+
+
+
+
+
+|| Insert the data ||
+
+load data local inpath '/home/cloudera/hivedata/Partitiondata/Indtxn' into table parttab partition (country = 'INDIA');
+load data local inpath '/home/cloudera/hivedata/Partitiondata/Usatxn' into table parttab partition (country = 'USA');
+load data local inpath '/home/cloudera/hivedata/Partitiondata/Uktxn' into table parttab partition (country = 'UK');
+
+
+
+
+
+|| Check the directory in HDFS ||
+
+Hadoop fs -ls /user/cloudera/partdir
+
+
+
+
+|| We can see three partitioned directory ||
+
+drwxr-xr-x   - cloudera cloudera          0 2025-10-26 23:52 /user/cloudera/partdir/country=INDIA
+drwxr-xr-x   - cloudera cloudera          0 2025-10-27 00:04 /user/cloudera/partdir/country=UK
+drwxr-xr-x   - cloudera cloudera          0 2025-10-27 00:04 /user/cloudera/partdir/country=USA
