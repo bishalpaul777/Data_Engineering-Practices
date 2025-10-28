@@ -55,48 +55,12 @@ spark.read.format("csv").load("data/test.txt").toDF("Success").show(20, False)
 ##################🔴🔴🔴🔴🔴🔴 -> DONT TOUCH ABOVE CODE -- TYPE BELOW ####################################
 
 
+print("==========Reading File1 data==========")
+
+data = sc.textFile("file1.txt")
 print()
-
-a = 1
-print("Value of a after adding 2 is: ",2+a)
-
-print()
-
-
-lst = [1,4,9,7]
-
-print("=====Raw list======")
-print(lst)
-print()
-
-print("=====RDD List======")
-rdd = sc.parallelize(lst)
-print(rdd.collect())
-print()
-
-print("=======Adding 2 with each element of the list=====")
-add = rdd.map(lambda x: x+2)
-print(add.collect())
+data.foreach(print)
 print()
 
 
-print("=====Print the element less than 8======")
-less = rdd.filter(lambda x: x<8)
-print(less.collect())
-print()
 
-
-zeyo = ['zeyo','zeyobron','analytics']
-print("=====Raw zeyo list====")
-print(zeyo)
-print()
-zeyordd = sc.parallelize(zeyo)
-print("====RDD Zeyo List=====")
-print(zeyordd.collect())
-print()
-
-
-print("====Filter only zeyo====")
-zeyofil = zeyordd.filter(lambda x: 'zeyo' in x)
-print(zeyofil.collect())
-print()
