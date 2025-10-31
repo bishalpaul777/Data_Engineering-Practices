@@ -44,7 +44,7 @@ spark.read.format("csv").load("data/test.txt").toDF("Success").show(20, False)
 print()
 
 print("=====CSV to Dataframe======")
-csvdf = spark.read.format("csv").option("header","true").load("df.csv")
+csvdf = spark.read.format("csv").option("header","true").load("usdata.csv")
 csvdf.show()
 print()
 
@@ -68,23 +68,23 @@ print()
 
 
 
-print("=====SQL to Dataframe=====")
-
-sqldf = (
-    spark.read
-    .format("jdbc")
-    .option("url", "jdbc:mariadb://localhost:3306/movies")
-    .option("driver", "org.mariadb.jdbc.Driver")
-    .option("user", "root")
-    .option("password", "")
-    .option("query", "SELECT CAST(id AS CHAR) AS id, name, director, CAST(date AS CHAR) AS date FROM movie_details")
-    .load()
-)
-
-
-sqldf = sqldf.withColumn("id", col("id").cast("int"))
-sqldf = sqldf.withColumn("date", to_date(col("date"), "yyyy-MM-dd"))
-sqldf.printSchema()
-sqldf.show()
+# print("=====SQL to Dataframe=====")
+#
+# sqldf = (
+#     spark.read
+#     .format("jdbc")
+#     .option("url", "jdbc:mariadb://localhost:3306/movies")
+#     .option("driver", "org.mariadb.jdbc.Driver")
+#     .option("user", "root")
+#     .option("password", "")
+#     .option("query", "SELECT CAST(id AS CHAR) AS id, name, director, CAST(date AS CHAR) AS date FROM movie_details")
+#     .load()
+# )
+#
+#
+# sqldf = sqldf.withColumn("id", col("id").cast("int"))
+# sqldf = sqldf.withColumn("date", to_date(col("date"), "yyyy-MM-dd"))
+# sqldf.printSchema()
+# sqldf.show()
 
 
