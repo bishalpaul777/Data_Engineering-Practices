@@ -30,9 +30,7 @@ from pyspark import SparkConf, SparkContext
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import *
 import sys
-import os
-import urllib.request
-import ssl
+
 
 python_path = sys.executable
 os.environ['PYSPARK_PYTHON'] = python_path
