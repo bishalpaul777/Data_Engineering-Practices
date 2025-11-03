@@ -132,14 +132,34 @@ where Role = 'Accountant')
 print()
 
 
-# Show the top 3 highest-paid employees.
-#
-# Find the average experience of employees in the “Finance” department.
-#
-# List employees who work in Boston or New York.
-#
-# Count how many unique job roles exist in the IT department.
-#
-# Display employees ordered by salary descending and experience ascending.
-#
-# Find the department with the highest average salary.
+
+print("====Top 3 highest paid employees===")
+spark.sql("select * from sqldf order by Salary desc limit 3").show()
+print()
+
+
+print("====Average experience in Finance Department=====")
+spark.sql("select avg(Experience) as Average_exp from sqldf where Department = 'Finance'").show()
+print()
+
+
+
+print("====List of Employees work in Boston or New York====")
+spark.sql("select * from sqldf where Location IN ('Boston','New York')").show()
+print()
+
+
+
+print("====Unique Job roles In IT dept====")
+spark.sql("select distinct(Role) from sqldf where Department = 'IT'").show()
+print()
+
+
+print("====Display Employee salary descending, experience ascending====")
+spark.sql("select * from sqldf order by Salary desc, Experience asc").show()
+print()
+
+
+print("===Find the department with the highest average salary===")
+spark.sql("select Department, Round(avg(Salary),2) as Average_Salary from sqldf group by Department order by Average_Salary desc limit 1 ").show()
+print()
