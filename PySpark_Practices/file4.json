@@ -1,3 +1,4 @@
+[
 {"txnno":"00060747","txndate":"09-06-2011","custno":"4002143","amount":"074.68","category":"Winter Sports","product":"Sledding","city":"Long Beach","state":"California","spendby":"credit"}
 {"txnno":"00060748","txndate":"09-17-2011","custno":"4000219","amount":"138.63","category":"Jumping","product":"Pogo Sticks","city":"Vancouver","state":"Washington","spendby":"credit"}
 {"txnno":"00060749","txndate":"10-02-2011","custno":"4009381","amount":"173.42","category":"Team Sports","product":"Cricket","city":"Everett","state":"Washington","spendby":"credit"}
@@ -15241,3 +15242,4 @@
 {"txnno":"00075987","txndate":"05-04-2011","custno":"4006269","amount":"140.43","category":"Gymnastics","product":"Springboards","city":"Salem","state":"Oregon","spendby":"credit"}
 {"txnno":"00075988","txndate":"04-06-2011","custno":"4003447","amount":"056.18","category":"Outdoor Play Equipment","product":"Outdoor Playsets","city":"Charlotte","state":"North Carolina","spendby":"credit"}
 {"txnno":"00075989","txndate":"01-24-2011","custno":"4003157","amount":"111.13","category":"Games","product":"Portable Electronic Games","city":"Washington","state":"District of Columbia","spendby":"credit"}
+]
